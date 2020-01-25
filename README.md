@@ -1,5 +1,7 @@
 # Super simple CLI controller
 
+> `npm install cli-controller`
+
 ```javascript
 // index.js
 const { bootstrapCli } = require('cli-controller')
