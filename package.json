@@ -2,7 +2,8 @@
   "name": "cli-controller",
   "version": "0.0.1",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf ./dist && tsc",
