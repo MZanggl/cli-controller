@@ -1,0 +1,22 @@
+{
+  "name": "cli-controller",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "prepublish": "npm run compile",
+    "build": "rm -rf ./dist && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/minimist": "^1.2.0",
+    "@types/node": "^13.5.0",
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.5"
+  }
+}
