@@ -1,27 +1,52 @@
 import * as minimist from 'minimist'
-import { RouteResolver } from './types'
+import { RouteResolver, CallbackContext } from './types'
 
-const routes = new Map()
-
-function serve() {
+function serve(controller: Cli) {
   const { _: allArgs, ...flags } = minimist(process.argv.slice(2))
   const [ name, ...args ] = allArgs
+  const context: CallbackContext = { name, args, flags }
 
-  const resolver = routes.get(name)
-  if (!resolver) {
-    throw new Error(`route "${name}" was not found.`)
+  if (!name) {
+    return controller._options.default(context)
   }
 
-  resolver(args, flags)
+  const resolver = controller._options.routes.get(name)
+  if (!resolver) {
+    return controller._options.fallback(context)
+  }
+
+  resolver(context)
 }
 
-export function route<T, F>(name: string, resolver: RouteResolver<T, F>) {
-  routes.set(name, resolver)
-}
+export class Cli {
+  _options = {
+    routes: new Map(),
+    fallback({name}: CallbackContext): void {
+      throw new Error(`route "${name}" was not found.`)
+    },
+    default(context: CallbackContext) {
+      this.fallback(context)
+    }
+  }
 
-export function bootstrapCli(router) {
-  router(route)
-  serve()
+  fallback(callback: ((context: CallbackContext) => void)) {
+    this._options.fallback = callback
+    return this
+  }
+
+  default(callback: ((context: CallbackContext) => void)) {
+    this._options.default = callback
+    return this
+  }
+
+  route<T, F>(name: string, resolver: RouteResolver<T, F>) {
+    this._options.routes.set(name, resolver)
+    return this
+  }
+
+  serve() {
+    serve(this)
+  }
 }
 
 export { RouteResolver }
