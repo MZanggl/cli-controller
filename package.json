@@ -19,6 +19,7 @@
   "dependencies": {
     "@types/minimist": "^1.2.0",
     "@types/node": "^13.5.0",
+    "flooent": "^2.0.1",
     "minimist": "^1.2.5"
   },
   "devDependencies": {

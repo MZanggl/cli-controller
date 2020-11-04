@@ -60,6 +60,28 @@ new Cli()
   .serve()
 ```
 
+### Cleaner API with params
+
+Consider the code for the following CLI `node ./index.js build my-app`
+
+```javascript
+new Cli()
+  .route('build', ({ args }) => {
+    const [project] = args
+  })
+  .serve()
+```
+
+It can be expressed much clearer using params:
+
+```javascript
+new Cli()
+  .route('build {project}', ({ params }) => {
+    console.log(params) // { project: 'my-app' }
+  })
+  .serve()
+```
+
 ### Fallback when route was not found
 
 By default, it will raise an exception.
@@ -77,4 +99,17 @@ new Cli()
     console.log('not found!', name)
   })
   .serve()
+```
+
+### Alternative API
+
+You don't need an endless chain if you don't want! This is also possible:
+
+
+```javascript
+const cli = new Cli()
+
+cli.route('build {project}', (context) => {})
+
+cli.serve()
 ```

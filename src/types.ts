@@ -6,4 +6,7 @@ export interface CallbackContext {
   flags: {
     [key: string]: string | boolean | number;
   }
+  params: {
+    [key: string]: string;
+  }
 }

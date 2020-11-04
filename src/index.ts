@@ -1,21 +1,28 @@
 import * as minimist from 'minimist'
 import { RouteResolver, CallbackContext } from './types'
+import { given } from 'flooent'
 
 function serve(controller: Cli) {
   const { _: allArgs, ...flags } = minimist(process.argv.slice(2))
   const [ name, ...args ] = allArgs
-  const context: CallbackContext = { name, args, flags }
+  const context: CallbackContext = { name, args, flags, params: {} }
 
   if (!name) {
     return controller._options.default(context)
   }
 
-  const resolver = controller._options.routes.get(name)
-  if (!resolver) {
+  const route = controller._options.routes.get(name)
+  if (!route) {
     return controller._options.fallback(context)
   }
 
-  resolver(context)
+  context.params = route.params.reduce((acc, key) => {
+    const [value] = context.args.splice(0, 1)
+    acc[key] = value
+    return acc
+  }, {})
+
+  route.resolver(context)
 }
 
 export class Cli {
@@ -40,7 +47,12 @@ export class Cli {
   }
 
   route<T, F>(name: string, resolver: RouteResolver<T, F>) {
-    this._options.routes.set(name, resolver)
+    const [params, nameParts] = given.array(name.split(' ')).partition(name => name.startsWith('{'))
+
+    this._options.routes.set(nameParts[0], {
+      resolver,
+      params: params.map(param => given.string(param).between('{').and('}'))
+    })
     return this
   }
 
