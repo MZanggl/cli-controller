@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/minimist": "^1.2.0",
     "@types/node": "^13.5.0",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.5"
   },
   "devDependencies": {
     "typescript": "^3.7.5"
