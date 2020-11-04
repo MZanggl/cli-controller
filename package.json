@@ -7,7 +7,7 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf ./dist && tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node japaFile.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
+    "japa": "^3.1.1",
     "typescript": "^3.7.5"
   }
 }
