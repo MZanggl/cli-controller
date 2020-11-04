@@ -82,6 +82,14 @@ new Cli()
   .serve()
 ```
 
+If the parameter is not specified, it will raise an exception. You can mark params optional like so:
+
+```javascript
+new Cli()
+  .route('build {project?}', ({ params }) => {})
+  .serve()
+```
+
 ### Fallback when route was not found
 
 By default, it will raise an exception.

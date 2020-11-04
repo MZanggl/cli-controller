@@ -18,7 +18,10 @@ function serve(controller: Cli) {
 
   context.params = route.params.reduce((acc, key) => {
     const [value] = context.args.splice(0, 1)
-    acc[key] = value
+    const isOptional = key.endsWith('?')
+    if (isOptional) key = given.string(key).beforeLast('?').valueOf()
+    if (!isOptional && value === undefined) throw new Error(`parameter ${key} is missing!`)
+    acc[key] = value ?? null
     return acc
   }, {})
 
