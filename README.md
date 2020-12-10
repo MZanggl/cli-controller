@@ -110,7 +110,7 @@ new Cli()
 
 ### Fallback when route was not found
 
-By default, it will raise an exception.
+By default, it will raise an exception optionally providing some alternative routes.
 
 ```bash
 node ./index.js does-not-exist

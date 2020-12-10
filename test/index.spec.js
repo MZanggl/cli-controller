@@ -21,7 +21,18 @@ test('will crash for unknown route when no fallback is provided', async assert =
   try {
     run(cli, 'node my-cli unknown')
   } catch(error) {
-    assert.include(error.message, 'route "unknown" was not found.')
+    assert.include(error.message, 'The route "unknown" was not found.')
+  }
+})
+
+test('fallback will provide alternative routes', assert => {
+  const cli = new Cli().route('db:migrate', () => {}).route('db:dump', () => {})
+
+  assert.plan(1)
+  try {
+    run(cli, 'node my-cli db')
+  } catch(error) {
+    assert.include(error.message, 'The route "db" was not found. Maybe you meant: db:migrate, db:dump.')
   }
 })
 

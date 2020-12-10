@@ -33,7 +33,14 @@ export class Cli {
     currentGroup: null,
     routes: new Map(),
     fallback({name}: CallbackContext): void {
-      throw new Error(`route "${name}" was not found.`)
+      let message = `The route "${name}" was not found.`
+      const alternatives = [...this.routes.keys()].filter(key => key.includes(name)).join(', ')
+
+      if (alternatives.length > 0) {
+        message += ` Maybe you meant: ${alternatives}.`
+      }
+
+      throw new Error(message)
     },
     default(context: CallbackContext) {
       this.fallback(context)
