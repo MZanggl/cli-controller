@@ -90,6 +90,24 @@ new Cli()
   .serve()
 ```
 
+### Group routes
+
+Group common routes together to create the following API:
+
+```bash
+node ./index.js db:migrate
+node ./index.js db:dump
+```
+
+```javascript
+new Cli()
+  .group('db', group => {
+    group.route('migrate', context => {})
+    group.route('dump', context => {})
+  })
+  .serve()
+```
+
 ### Fallback when route was not found
 
 By default, it will raise an exception.

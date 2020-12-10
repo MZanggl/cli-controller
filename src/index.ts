@@ -30,6 +30,7 @@ function serve(controller: Cli) {
 
 export class Cli {
   _options = {
+    currentGroup: null,
     routes: new Map(),
     fallback({name}: CallbackContext): void {
       throw new Error(`route "${name}" was not found.`)
@@ -49,10 +50,29 @@ export class Cli {
     return this
   }
 
+  group(name: string, callback: (cli: Cli) => void) {
+    if (this._options.currentGroup) {
+      throw new Error('Nested groups are not supported.')
+    }
+
+    this._options.currentGroup = name
+    callback(this)
+    this._options.currentGroup = null
+
+    return this
+  }
+  
+  private makeRouteName(route) {
+    if (!this._options.currentGroup) {
+      return route
+    }
+    return `${this._options.currentGroup}:${route}`
+  }
+
   route<T, F>(name: string, resolver: RouteResolver<T, F>) {
     const [params, nameParts] = given.array(name.split(' ')).partition(name => name.startsWith('{'))
 
-    this._options.routes.set(nameParts[0], {
+    this._options.routes.set(this.makeRouteName(nameParts[0]), {
       resolver,
       params: params.map(param => given.string(param).between('{').and('}'))
     })

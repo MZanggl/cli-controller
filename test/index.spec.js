@@ -71,3 +71,36 @@ test('can call route with params without specifying all params if they are optio
 
   run(cli, 'node my-cli with-optional')
 })
+
+test('can create groups', assert => {
+  assert.plan(1)
+  const cli = new Cli().group('db', group => {
+    group.route('migrate', context => {
+      assert.deepEqual(context, {"name":"db:migrate","args":[],"flags":{},"params":{}})
+    })
+  })
+
+  run(cli, 'node my-cli db:migrate')
+})
+
+test('route groups get reset after the callback', assert => {
+  assert.plan(1)
+  const cli = new Cli().group('db', group => {})
+    .route('migrate', context => {
+      assert.deepEqual(context, {"name":"migrate","args":[],"flags":{},"params":{}})
+    })
+
+  run(cli, 'node my-cli migrate')
+})
+
+test('can not create nested groups', assert => {
+  assert.plan(1)
+  
+  try {
+    new Cli().group('db', group => {
+      group.group('haha', context => {})
+    })
+  } catch(error) {
+    assert.include(error.message, 'Nested groups are not supported.')
+  }
+})
