@@ -42,8 +42,8 @@ export class Cli {
 
       throw new Error(message)
     },
-    default(context: CallbackContext) {
-      this.fallback(context)
+    default: (context: CallbackContext) => {
+      console.table(this.routeList())
     }
   }
 
@@ -80,10 +80,17 @@ export class Cli {
     const [params, nameParts] = given.array(name.split(' ')).partition(name => name.startsWith('{'))
 
     this._options.routes.set(this.makeRouteName(nameParts[0]), {
+      raw: this.makeRouteName(name),
       resolver,
       params: params.map(param => given.string(param).between('{').and('}'))
     })
     return this
+  }
+
+  routeList() {
+    return [...this._options.routes.values()].map(route => {
+      return { Name: route.raw }
+    })
   }
 
   serve() {

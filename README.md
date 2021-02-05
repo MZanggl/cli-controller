@@ -2,7 +2,7 @@
 
 > `npm install cli-controller`
 
-> Of course you can make a proper CLI out of it using the "bin" field in package.json
+> Make a proper CLI out of it using the "bin" field in package.json
 
 ## Examples
 
@@ -59,6 +59,8 @@ new Cli()
   })
   .serve()
 ```
+
+If `default` it's not specified, a list of available routes will be printed to the console.
 
 ### Cleaner API with params
 

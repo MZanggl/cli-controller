@@ -6,6 +6,18 @@ function run(cli, args) {
   cli.serve()
 }
 
+test('will list all available routes if default route is not specified', async assert => {
+  assert.plan(1)
+  const cli = new Cli()
+    .route('make {project?}', () => {})
+    .route('build {project}', () => {})
+    .group('db', group => {
+      group.route('migrate', () => {})
+    })
+
+  assert.deepEqual(cli.routeList(), ['make {project?}', 'build {project}', 'db:migrate'])
+})
+
 test('will call default route if no argument is provided', async assert => {
   assert.plan(1)
   const cli = new Cli().default(context => {
