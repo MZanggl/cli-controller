@@ -141,3 +141,29 @@ cli.route('build {project}', (context) => {})
 
 cli.serve()
 ```
+
+### Document your API
+
+You can add a description to your API so they appear like below when calling the CLI with the `-h` or `--help` flag ...
+
+```bash
+node ./index.js -h
+# Command Line Interface for Something Awesome!
+#
+# make {project} - Make something awesome
+```
+
+... as well as like below for individual routes.
+
+```bash
+node ./index.js make -h
+# make {project} - Make something awesome
+```
+
+```javascript
+const cli = new Cli().description('Command Line Interface for Something Awesome!')
+
+cli.route('build {project}', (context) => {}, { description: 'Make something awesome' })
+
+cli.serve()
+```
