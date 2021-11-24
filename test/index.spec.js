@@ -15,7 +15,7 @@ test('will list all available routes if default route is not specified', async a
       group.route('migrate', () => {})
     })
 
-  assert.deepEqual(cli.routeList(), ['make {project?}', 'build {project}', 'db:migrate'])
+  assert.deepEqual(cli.routeList(), [{ Name: 'make {project?}' }, { Name:'build {project}' }, { Name: 'db:migrate' }])
 })
 
 test('will call default route if no argument is provided', async assert => {

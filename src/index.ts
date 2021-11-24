@@ -2,31 +2,7 @@ import * as minimist from 'minimist'
 import { RouteResolver, CallbackContext } from './types'
 import { given } from 'flooent'
 
-function serve(controller: Cli) {
-  const { _: allArgs, ...flags } = minimist(process.argv.slice(2))
-  const [ name, ...args ] = allArgs
-  const context: CallbackContext = { name, args, flags, params: {} }
-
-  if (!name) {
-    return controller._options.default(context)
   }
-
-  const route = controller._options.routes.get(name)
-  if (!route) {
-    return controller._options.fallback(context)
-  }
-
-  context.params = route.params.reduce((acc, key) => {
-    const [value] = context.args.splice(0, 1)
-    const isOptional = key.endsWith('?')
-    if (isOptional) key = given.string(key).beforeLast('?').valueOf()
-    if (!isOptional && value === undefined) throw new Error(`parameter ${key} is missing!`)
-    acc[key] = value ?? null
-    return acc
-  }, {})
-
-  route.resolver(context)
-}
 
 export class Cli {
   _options = {
@@ -94,7 +70,29 @@ export class Cli {
   }
 
   serve() {
-    serve(this)
+    const { _: allArgs, ...flags } = minimist(process.argv.slice(2))
+    const [ name, ...args ] = allArgs
+    const context: CallbackContext = { name, args, flags, params: {} }
+
+    if (!name) {
+      return this._options.default(context)
+    }
+
+    const route = this._options.routes.get(name)
+    if (!route) {
+      return this._options.fallback(context)
+    }
+
+    context.params = route.params.reduce((acc, key) => {
+      const [value] = context.args.splice(0, 1)
+      const isOptional = key.endsWith('?')
+      if (isOptional) key = given.string(key).beforeLast('?').valueOf()
+      if (!isOptional && value === undefined) throw new Error(`parameter ${key} is missing!`)
+      acc[key] = value ?? null
+      return acc
+    }, {})
+
+    route.resolver(context)
   }
 }
 
